@@ -1,3 +1,14 @@
 // Place all the styles related to the graphic_cards controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: https://sass-lang.com/
+@import 'bootstrap/scss/bootstrap';
+
+.card-link:hover {
+  color: black;
+  transform: scale(1.2);
+  background-color: transparent;
+}
+
+a {
+  text-decoration: none;
+}

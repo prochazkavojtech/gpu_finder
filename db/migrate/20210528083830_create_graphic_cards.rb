@@ -5,6 +5,8 @@ class CreateGraphicCards < ActiveRecord::Migration[6.1]
       t.string :price
       t.string :stock
       t.string :link
+      t.string :identifier
+      t.string :shop
 
       t.timestamps
     end

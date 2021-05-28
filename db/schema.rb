@@ -20,6 +20,8 @@ ActiveRecord::Schema.define(version: 2021_05_28_083830) do
     t.string "price"
     t.string "stock"
     t.string "link"
+    t.string "identifier"
+    t.string "shop"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end
