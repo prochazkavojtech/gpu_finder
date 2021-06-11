@@ -1,4 +1,6 @@
 class GraphicCard < ApplicationRecord
+  after_commit :add_card, on: :create
+  after_commit :delete_card, on: :destroy
   require 'open-uri'
   REGEX = /(3060|3070|3080|6800|3090|6900)/
 
@@ -15,6 +17,7 @@ class GraphicCard < ApplicationRecord
       iden = link.match(/\=(.*)/)[1]
       
       next unless name.match?(REGEX)
+      next if stock == 'Těšíme se' || stock == 'Neni k dispozici'
 
       GraphicCard.create(name: name, price: price, stock: stock, link: link, shop: shop, identifier: iden)
     end
@@ -32,6 +35,7 @@ class GraphicCard < ApplicationRecord
       iden = link.match(/(\-)(?!.*\1)(.*)\.htm/)[2]
       
       next unless name.match?(REGEX)
+      next if stock == 'Těšíme se' || stock == 'Neni k dispozici'
 
       GraphicCard.create(name: name, price: price, stock: stock, link: link, shop: shop, identifier: iden)
     end
@@ -49,8 +53,17 @@ class GraphicCard < ApplicationRecord
       iden = link.match(/(?<=\/)[^\/]*(?=\/[^\/]*$)/).to_s
 
       next unless name.match?(REGEX)
+      next if stock == 'Těšíme se' || stock == 'Neni k dispozici'
 
       GraphicCard.create(name: name, price: price, stock: stock, link: link, shop: shop, identifier: iden)
     end
+  end
+
+  def add_card
+    ActionCable.server.broadcast('cards_channel', name: name, shop: shop, stock: stock, price: price, link: link, identifier: identifier, method: 'create')
+  end
+
+  def delete_card
+    ActionCable.server.broadcast('cards_channel', identifier: identifier, method: 'delete')
   end
 end
